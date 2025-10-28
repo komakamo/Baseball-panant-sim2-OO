@@ -8573,6 +8573,7 @@ function advanceSeason() {
 }
 
 $("#btnGen").onclick=()=>{
+  playSound('G4', '16n');
   const hasSchedule = Array.isArray(State.schedule) && State.schedule.length > 0;
   const hasCurrDay = typeof State.curr_day === 'number';
   if (hasSchedule && hasCurrDay && State.curr_day <= maxDay()) {
@@ -8620,6 +8621,7 @@ $("#btnGen").onclick=()=>{
 };
 
 $("#btnToday").onclick=()=>{
+  playSound('C5', '16n');
   const complianceMap = refreshRosterComplianceAll();
   const tid = State.userTeamId ?? 0;
   const compliance = complianceMap[tid] || State.rosterCompliance?.[tid] || null;
@@ -8699,6 +8701,7 @@ $("#btnToday").onclick=()=>{
   saveAndRerender();
 };
 $("#btnEnd").onclick=()=>{
+  playSound('C5', '16n');
   if(!State.schedule.length) return;
   if(hasBlockingRosterViolations()){
     const tid=State.userTeamId ?? 0;
@@ -8718,7 +8721,7 @@ $("#btnEnd").onclick=()=>{
     if(hasBlockingRosterViolations()) break;
   }
 };
-$("#btnReset").onclick=()=>{ if(confirm("本当に全データをリセットしますか？この操作は元に戻せません。")){ localStorage.removeItem(SAVE_KEY); window.location.reload(); } };
+$("#btnReset").onclick=()=>{ playSound('G2', '8n'); if(confirm("本当に全データをリセットしますか？この操作は元に戻せません。")){ localStorage.removeItem(SAVE_KEY); window.location.reload(); } };
 
 // ====== Save/Load ======
 function save(){ localStorage.setItem(SAVE_KEY, JSON.stringify(State)); }
