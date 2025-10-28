@@ -192,6 +192,11 @@
     button.primary:hover{background:var(--primary-hover)}
     button.ghost{background:transparent; box-shadow: none;}
     button:disabled{opacity:.6;cursor:not-allowed;background:#e2e8f0; transform: translateY(0); box-shadow: 0 4px 0 0 var(--shadow-color);}
+    button[data-blocked]{
+      border-color: var(--bad);
+      color: var(--bad);
+      background: rgba(255,92,92,0.12);
+    }
     .toast-container{position:fixed;top:84px;right:24px;display:flex;flex-direction:column;gap:10px;z-index:2000;pointer-events:none;max-width:320px;}
     .toast{border:2px solid var(--card-border);border-radius:12px;background:rgba(255,255,255,0.96);box-shadow:0 12px 30px rgba(15,23,42,0.16);padding:14px 16px;display:flex;flex-direction:column;gap:6px;min-width:240px;opacity:0;transform:translateY(-6px);transition:opacity .2s ease, transform .2s ease;pointer-events:auto;}
     .toast.visible{opacity:1;transform:translateY(0);}
@@ -1670,11 +1675,19 @@ function hasBlockingRosterViolations(tid = State.userTeamId ?? 0){
 }
 
 function updateAdvanceButtonsState(){
-  const disabled = hasBlockingRosterViolations();
-  const btnToday = document.querySelector('#btnToday');
-  if(btnToday) btnToday.disabled = disabled;
-  const btnEnd = document.querySelector('#btnEnd');
-  if(btnEnd) btnEnd.disabled = disabled;
+  const blocked = hasBlockingRosterViolations();
+  const selectors = ['#btnToday', '#btnEnd'];
+  selectors.forEach(selector => {
+    const button = document.querySelector(selector);
+    if(!button) return;
+    if(blocked){
+      button.setAttribute('data-blocked', 'roster');
+      button.setAttribute('title', '外国人枠違反を解消してください');
+    } else {
+      button.removeAttribute('data-blocked');
+      button.removeAttribute('title');
+    }
+  });
 }
 
 function releasePlayerToFreeAgency(tid, playerId, reason='契約満了'){
