@@ -3536,8 +3536,8 @@ function applyTrainingWeek(tid,weeks=1,label="週次育成"){
 function findPlayerById(tid,pid){ const R=State.rosters[tid]; return R.bats.find(b=>b.id===pid) || R.pits.find(p=>p.id===pid); }
 function doSpecialTraining(tid,pid){ ensureTeamMeta(); const cost=5; 
   const P=findPlayerById(tid,pid); if(!P) return; 
-  if (P.injury) { console.error('怪我中の選手は特訓できません'); return; }
-  if(!dpSpend(tid,cost)){ console.error(`Devポイントが不足しています（必要:${cost}）`); return; }
+  if (P.injury) { showToast('怪我中の選手は特訓できません', { type: 'error' }); return; }
+  if(!dpSpend(tid,cost)){ showToast(`Devポイントが不足しています（必要:${cost}）`, { type: 'error' }); return; }
   
   const isPitch=(P.velo!==undefined); const plan=State.trainingPlans[tid][pid]||{focus:isPitch?"Velo":"Con",intens:"標準"}; const focus=plan.focus;
   const morale=P.morale||60, fatigue=P.fatigue||20; const base=1 + (morale-50)/80 - (fatigue)/120; const r=Math.random(); let result,amt;
