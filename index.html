@@ -926,15 +926,15 @@ let soundFailed = false;
 let synth;
 
 async function setupSound() {
-    if (soundReady || soundFailed) {
-        return;
-    }
-    if (!window.Tone) {
-        console.warn('Tone.js not available; sound disabled.');
-        soundFailed = true;
-        return;
-    }
     try {
+        if (soundReady || soundFailed) {
+            return;
+        }
+        if (!window.Tone) {
+            console.warn('Tone.js not available; sound disabled.');
+            soundFailed = true;
+            return;
+        }
         await Tone.start();
         synth = new Tone.Synth({
             oscillator: { type: 'triangle' },
@@ -948,8 +948,13 @@ async function setupSound() {
 }
 
 function playSound(note, len = '16n') {
-    if (soundReady && synth) {
-        synth.triggerAttackRelease(note, len);
+    try {
+        if (soundReady && synth) {
+            synth.triggerAttackRelease(note, len);
+        }
+    } catch (err) {
+        console.warn(`Failed to play sound ${note}:`, err);
+        soundFailed = true;
     }
 }
 
